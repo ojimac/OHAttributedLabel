@@ -446,7 +446,7 @@ static NSString* const kHelveticaNeueUI_Bold_Italic = @".HelveticaNeueUI-BoldIta
 
     CTParagraphStyleRef aStyle = CTParagraphStyleCreate(paraStyles, arraySize);
     [self removeAttribute:(NSString*)kCTParagraphStyleAttributeName range:range]; // Work around for Apple leak
-    [self addAttribute:(NSString*)kCTParagraphStyleAttributeName value:(id)aStyle range:range];
+    [self addAttribute:(NSString*)kCTParagraphStyleAttributeName value:(__bridge id)aStyle range:range];
     CFRelease(aStyle);
 }
 
