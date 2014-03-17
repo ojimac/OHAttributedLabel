@@ -95,6 +95,18 @@ extern NSString* kOHLinkAttributeName;
 -(void)setParagraphStyle:(OHParagraphStyle*)style range:(NSRange)range;
 
 -(void)setLink:(NSURL*)link range:(NSRange)range;
+
+// 日本語の行間が広すぎる問題を解決する
+// see http://eikatou.net/blog/2012/09/ios_rich_uilabel_2/
+- (void)setTextAlignment:(CTTextAlignment)alignment
+           lineBreakMode:(CTLineBreakMode)lineBreakMode
+           maxLineHeight:(CGFloat)maxLineHeight
+           minLineHeight:(CGFloat)minLineHeight
+          maxLineSpacing:(CGFloat)maxLineSpacing
+          minLineSpacing:(CGFloat)minLineSpacing
+     firstLineHeadIndent:(CGFloat)firstLineHeadIndent
+                   range:(NSRange)range;
+
 @end
 
 

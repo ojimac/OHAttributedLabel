@@ -402,6 +402,54 @@ static NSString* const kHelveticaNeueUI_Bold_Italic = @".HelveticaNeueUI-BoldIta
     }
 }
 
+// 日本語の行間が広すぎる問題を解決する
+// see http://eikatou.net/blog/2012/09/ios_rich_uilabel_2/
+- (void)setTextAlignment:(CTTextAlignment)alignment
+           lineBreakMode:(CTLineBreakMode)lineBreakMode
+           maxLineHeight:(CGFloat)maxLineHeight
+           minLineHeight:(CGFloat)minLineHeight
+          maxLineSpacing:(CGFloat)maxLineSpacing
+          minLineSpacing:(CGFloat)minLineSpacing
+     firstLineHeadIndent:(CGFloat)firstLineHeadIndent
+                   range:(NSRange)range
+{
+    int arraySize = 7;
+    CTParagraphStyleSetting paraStyles[arraySize];
+
+    paraStyles[0].spec = kCTParagraphStyleSpecifierMaximumLineHeight;
+    paraStyles[0].valueSize = sizeof(CGFloat);
+    paraStyles[0].value = &maxLineHeight;
+
+    paraStyles[1].spec = kCTParagraphStyleSpecifierMinimumLineHeight;
+    paraStyles[1].valueSize = sizeof(CGFloat);
+    paraStyles[1].value = &minLineHeight;
+
+    paraStyles[2].spec = kCTParagraphStyleSpecifierMaximumLineSpacing;
+    paraStyles[2].valueSize = sizeof(CGFloat);
+    paraStyles[2].value = &maxLineSpacing;
+
+    paraStyles[3].spec = kCTParagraphStyleSpecifierMinimumLineSpacing;
+    paraStyles[3].valueSize = sizeof(CGFloat);
+    paraStyles[3].value = &minLineSpacing;
+
+    paraStyles[4].spec = kCTParagraphStyleSpecifierAlignment;
+    paraStyles[4].valueSize = sizeof(CTTextAlignment);
+    paraStyles[4].value = (const void*)&alignment;
+
+    paraStyles[5].spec = kCTParagraphStyleSpecifierLineBreakMode;
+    paraStyles[5].valueSize = sizeof(CTLineBreakMode);
+    paraStyles[5].value = (const void*)&lineBreakMode;
+
+    paraStyles[6].spec = kCTParagraphStyleSpecifierFirstLineHeadIndent;
+    paraStyles[6].valueSize = sizeof(CGFloat);
+    paraStyles[6].value = (const void*)&firstLineHeadIndent;
+
+    CTParagraphStyleRef aStyle = CTParagraphStyleCreate(paraStyles, arraySize);
+    [self removeAttribute:(NSString*)kCTParagraphStyleAttributeName range:range]; // Work around for Apple leak
+    [self addAttribute:(NSString*)kCTParagraphStyleAttributeName value:(id)aStyle range:range];
+    CFRelease(aStyle);
+}
+
 @end
 
 
